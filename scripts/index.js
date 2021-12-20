@@ -7,6 +7,7 @@ canvas.height = window.innerHeight
 let particles = []
 
 const mouse = {
+  active: false,
   x: null,
   y: null,
   radius: 150
@@ -16,6 +17,9 @@ window.onmousemove = ({ x, y }) => {
   mouse.x = x
   mouse.y = y
 }
+
+document.onmouseenter = () => mouse.active = true
+document.onmouseleave = () => mouse.active = false
 
 ctx.font = '30px Roboto Mono'
 ctx.fillText('A', 40, 40)
@@ -48,10 +52,21 @@ class Particle {
 
     const distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))
 
-    if (distance < 150) {
-      this.size = 3 + (150-distance) * .09
+    const forceDirectionX = dx / distance
+    const forceDirectionY = dy / distance
+
+    const maxDistance = mouse.radius
+    const force = (maxDistance - distance) / maxDistance
+
+    if (distance < 250) {
+      this.size = 3 + (250-distance) / 50
     } else {
       this.size = 3
+    }
+
+    if (distance < 300) {
+      this.x += forceDirectionX
+      this.y += forceDirectionY
     }
   }
 }
@@ -75,7 +90,10 @@ const animate = () => {
 
   particles.forEach(x => {
     x.draw()
-    x.update()
+
+    if (mouse.active) {
+      x.update()
+    }
   })
 
   requestAnimationFrame(animate)
