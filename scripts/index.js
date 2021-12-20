@@ -10,7 +10,7 @@ const mouse = {
   active: false,
   x: null,
   y: null,
-  radius: 150
+  radius: 250
 }
 
 window.onmousemove = ({ x, y }) => {
@@ -58,15 +58,27 @@ class Particle {
     const maxDistance = mouse.radius
     const force = (maxDistance - distance) / maxDistance
 
-    if (distance < 250) {
-      this.size = 3 + (250-distance) / 50
+    const directionX = forceDirectionX * force * this.density
+    const directionY = forceDirectionY * force * this.density
+
+    if (distance < mouse.radius) {
+      this.size = 3 + (mouse.radius - distance) / 50
     } else {
       this.size = 3
     }
 
-    if (distance < 300) {
-      this.x += forceDirectionX
-      this.y += forceDirectionY
+    if (distance < mouse.radius) {
+      this.x -= directionX
+      this.y -= directionY
+    } else {
+      if (this.x !== this.baseX) {
+        const dx = this.x - this.baseX
+        this.x -= dx / 10
+      }
+      if (this.y !== this.baseY) {
+        const dy = this.y - this.baseY
+        this.y -= dy / 10
+      }
     }
   }
 }
@@ -82,8 +94,6 @@ const init = () => {
   }
 }
 init()
-
-console.log(particles)
 
 const animate = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
