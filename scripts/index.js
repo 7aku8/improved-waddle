@@ -10,7 +10,7 @@ const mouse = {
   active: false,
   x: null,
   y: null,
-  radius: 250
+  radius: 80
 }
 
 window.onmousemove = ({ x, y }) => {
@@ -22,9 +22,9 @@ document.onmouseenter = () => mouse.active = true
 document.onmouseleave = () => mouse.active = false
 
 ctx.font = '30px Roboto Mono'
-ctx.fillText('A', 40, 40)
+ctx.fillText('Jakub', 40, 40)
 
-const data = ctx.getImageData(0, 0, 100, 100)
+const textCoordinates = ctx.getImageData(0, 0, 100, 100)
 
 class Particle {
   constructor(x, y) {
@@ -73,7 +73,7 @@ class Particle {
     } else {
       if (this.x !== this.baseX) {
         const dx = this.x - this.baseX
-        this.x -= dx / 10
+        this.x -= dx / 5
       }
       if (this.y !== this.baseY) {
         const dy = this.y - this.baseY
@@ -82,16 +82,27 @@ class Particle {
     }
   }
 }
-
+console.log(textCoordinates)
 const init = () => {
   particles = []
 
-  for (let i = 0; i < 1000; i++) {
-    const x = Math.random() * canvas.width
-    const y = Math.random() * canvas.height
+  for (let y = 0, y2 = textCoordinates.height; y < y2; y++) {
+    for (let x = 0, x2 = textCoordinates.width; x < x2; x++) {
+      if (textCoordinates.data[(y * 4 * textCoordinates.width) + (x * 4) + 3] > 128) {
+        const positionX = x * 10;
+        const positionY = y * 10;
 
-    particles.push(new Particle(x, y))
+        particles.push(new Particle(positionX, positionY))
+      }
+    }
   }
+
+  // for (let i = 0; i < 100; i++) {
+  //   const x = Math.random() * canvas.width
+  //   const y = Math.random() * canvas.height
+  //
+  //   particles.push(new Particle(x, y))
+  // }
 }
 init()
 
