@@ -10,7 +10,7 @@ const mouse = {
   active: false,
   x: null,
   y: null,
-  radius: 80
+  radius: 120
 }
 
 window.onmousemove = ({ x, y }) => {
@@ -24,7 +24,7 @@ document.onmouseleave = () => mouse.active = false
 ctx.font = '30px Roboto Mono'
 ctx.fillText('Jakub', 40, 40)
 
-const textCoordinates = ctx.getImageData(0, 0, 100, 100)
+const textCoordinates = ctx.getImageData(0, 0, 160, 100)
 
 class Particle {
   constructor(x, y) {
@@ -82,15 +82,18 @@ class Particle {
     }
   }
 }
-console.log(textCoordinates)
+
 const init = () => {
   particles = []
 
   for (let y = 0, y2 = textCoordinates.height; y < y2; y++) {
     for (let x = 0, x2 = textCoordinates.width; x < x2; x++) {
       if (textCoordinates.data[(y * 4 * textCoordinates.width) + (x * 4) + 3] > 128) {
-        const positionX = x * 10;
-        const positionY = y * 10;
+        const randX = Math.floor((Math.random() * 10 - 5) / 1.2)
+        const randY = Math.floor((Math.random() * 10 - 5) / 1.2)
+
+        const positionX = x * 10 + randX;
+        const positionY = y * 10 + randY;
 
         particles.push(new Particle(positionX, positionY))
       }
