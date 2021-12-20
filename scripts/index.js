@@ -67,7 +67,7 @@ class Particle {
       this.size = 3
     }
 
-    if (distance < mouse.radius) {
+    if (distance < mouse.radius && mouse.active) {
       this.x -= directionX
       this.y -= directionY
     } else {
@@ -111,10 +111,7 @@ const animate = () => {
 
   particles.forEach(x => {
     x.draw()
-
-    if (mouse.active) {
-      x.update()
-    }
+    x.update()
   })
 
   requestAnimationFrame(animate)
