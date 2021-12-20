@@ -21,7 +21,7 @@ window.onmousemove = ({ x, y }) => {
 document.onmouseenter = () => mouse.active = true
 document.onmouseleave = () => mouse.active = false
 
-ctx.font = '30px Roboto Mono'
+ctx.font = '32px Roboto Mono, bold'
 ctx.fillText('Jakub', 40, 40)
 
 const textCoordinates = ctx.getImageData(0, 0, 160, 100)
@@ -35,7 +35,7 @@ class Particle {
     this.baseX = this.x
     this.baseY = this.y
 
-    this.density = Math.random() * 30 + 1
+    this.density = Math.random() * 25 + 1
   }
 
   draw() {
@@ -62,9 +62,9 @@ class Particle {
     const directionY = forceDirectionY * force * this.density
 
     if (distance < mouse.radius) {
-      this.size = 3 + (mouse.radius - distance) / 50
+      this.size = 2 + (mouse.radius - distance) / 80
     } else {
-      this.size = 3
+      this.size = 2
     }
 
     if (distance < mouse.radius && mouse.active) {
@@ -73,11 +73,11 @@ class Particle {
     } else {
       if (this.x !== this.baseX) {
         const dx = this.x - this.baseX
-        this.x -= dx / 5
+        this.x -= dx / 4
       }
       if (this.y !== this.baseY) {
         const dy = this.y - this.baseY
-        this.y -= dy / 10
+        this.y -= dy / 4
       }
     }
   }
@@ -99,15 +99,31 @@ const init = () => {
       }
     }
   }
-
-  // for (let i = 0; i < 100; i++) {
-  //   const x = Math.random() * canvas.width
-  //   const y = Math.random() * canvas.height
-  //
-  //   particles.push(new Particle(x, y))
-  // }
 }
 init()
+
+const connect = () => {
+  const maxDistance = 25
+
+  for (let a = 0; a < particles.length; a++) {
+    for (let b = 0; b < particles.length; b++) {
+      const dx = particles[a].x - particles[b].x
+      const dy = particles[a].y - particles[b].y
+
+      const distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))
+
+      if (distance < maxDistance) {
+        ctx.strokeStyle = 'black'
+        ctx.lineWidth = 2 * ((maxDistance - distance) / maxDistance)
+        ctx.opacity = ((maxDistance - distance) / maxDistance)
+        ctx.beginPath()
+        ctx.moveTo(particles[a].x, particles[a].y)
+        ctx.lineTo(particles[b].x, particles[b].y)
+        ctx.stroke()
+      }
+    }
+  }
+}
 
 const animate = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -117,6 +133,7 @@ const animate = () => {
     x.update()
   })
 
+  connect()
   requestAnimationFrame(animate)
 }
 animate()
