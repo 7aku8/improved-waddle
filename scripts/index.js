@@ -21,17 +21,18 @@ window.onmousemove = ({ x, y }) => {
 document.onmouseenter = () => mouse.active = true
 document.onmouseleave = () => mouse.active = false
 
-ctx.font = '32px Roboto Mono, bold'
-ctx.fillText('Jakub', 40, 40)
+ctx.font = '24px Roboto Mono, bold'
+ctx.fillText('Jakub', 20, 40)
+ctx.fillText('Wolak', 30, 65)
 
-const textCoordinates = ctx.getImageData(0, 0, 160, 100)
+const textCoordinates = ctx.getImageData(0, 0, 120, 100)
 
 class Particle {
   constructor(x, y) {
     this.x = x
     this.y = y
 
-    this.size = 3
+    this.size = 2
     this.baseX = this.x
     this.baseY = this.y
 
@@ -62,9 +63,9 @@ class Particle {
     const directionY = forceDirectionY * force * this.density
 
     if (distance < mouse.radius) {
-      this.size = 2 + (mouse.radius - distance) / 80
+      this.size = 1.5 + (mouse.radius - distance) / 80
     } else {
-      this.size = 2
+      this.size = 1.5
     }
 
     if (distance < mouse.radius && mouse.active) {
